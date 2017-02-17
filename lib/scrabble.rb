@@ -17,4 +17,29 @@ class Scrabble
       "Y"=>4, "Z"=>10
     }
   end
+  
+  def score_with_multipliers(word, letter_multipliers, word_multiplier = 1)
+    multi = word.upcase.chars.each_with_index.map do |letter, i|
+      point_values[letter] * letter_multipliers[i]
+    end.reduce(:+)
+    
+    if word.length == 7
+      (multi + 10) * word_multiplier
+    else
+      multi * word_multiplier
+    end
+  end
+  
+  def highest_scoring_word(words)
+    words_sorted = words.map.sort_by { |word| score(word) }
+    highest_words = words_sorted.select { |word| score(word) == score(words_sorted.last) }
+    highest_words.sort_by! { |word| word.length }
+    if highest_words.last.length == 7
+      highest_words.last
+    else
+      highest_words.first
+    end
+  end
+  
+  
 end
